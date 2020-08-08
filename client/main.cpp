@@ -36,14 +36,14 @@ int main(int argc, char* argv[]) {
             cout << "\t\t GOT 1.000000001" << endl;
             cout << "Todos los comandos que descritos deben pre por el comando GOT" << endl;
             cout << "=============================================================\n" << endl;
-            cout << "init <nombre> \t\t Crea un nuevo repositorio <name>" << endl;
+            cout << "init <name> \t\t Crea un nuevo repositorio <name>" << endl;
             cout << "help \t\t\t Muestra informacion de lo que hace cada comando" << endl;
-            cout << "add [-A] [name] \t Agrega todos los archivos no registrados o con modificaciones al repositorio. [-A] agrega todos los archivos relevantes" << endl;
-            cout << "commit" << endl;
-            cout << "status" << endl;
-            cout << "rollback" << endl;
-            cout << "reset" << endl;
-            cout << "sync" << endl;
+            cout << "add [-A] [name] \t Agrega todos los archivos no registrados o con modificaciones al repositorio. [-A] agrega todos los archivos relevantes. Cuando los archivos se agregan, se marcan como pendientes de commit\n" << endl;
+            cout << "commit <mensaje> \t Agrega los archivos pendiates de commit al repositorio. Retorna la id del commit" << endl;
+            cout << "status <file> \t\t Muestra cambios realizados en comparacion al commit anterior. <file> retorna el historial de cambios realizados en <file>" << endl;
+            cout << "rollback <file> <commit> Permite regresar un archivo en el tiempo a un commit específico" << endl;
+            cout << "reset <file> \t\t Deshace cambios locales para un archivo y lo regresa al último commit" << endl;
+            cout << "sync <file> \t\t Recupera los cambios para un archivo en el repositorio y los sincroniza con los cambios del archivo local" << endl;
 
         } 
 
