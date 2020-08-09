@@ -26,8 +26,25 @@ int main(int argc, char* argv[]) {
             }
             else
             {
-                cout << "El respositrio "<< argv[2] << " ha sido creado" << endl;
-            }                     
+                cpr::Response r = cpr::Post(
+                    cpr::Url{"http://localhost:3000/repository"},
+                    cpr::Parameters{{"repository_Name",(string)argv[2]}},
+                    cpr::Header{ { "Content-Type", "application/json" }}
+                );
+
+                if(r.status_code == 200){
+                
+                    cout << "El respositrio "<< argv[2] << " ha sido creado" << endl;
+                               
+                }
+                else{
+                    cout << "No se ha logrado crear el respositrio "<< argv[2] << endl;
+                }
+                
+                /*cout << "Status: " << r.status_code << endl;                  // 200
+                cout << "Header: " << r.header["content-type"] << endl;       // application/json; charset=utf-8
+                cout << "Text: " << r.text << endl; */
+                return -1;}                     
             
         } 
 
