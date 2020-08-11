@@ -1,2 +1,19 @@
 
 client/CMakeFiles/
+
+client/_deps/
+
+client/bin/
+
+client/lib/
+
+client/CMakeLists.txt.user
+client/CMakeCache.txt
+client/CMakeFiles
+client/CMakeScripts
+client/Testing
+client/Makefile
+client/cmake_install.cmake
+client/install_manifest.txt
+client/compile_commands.json
+client/CTestTestfile.cmake
