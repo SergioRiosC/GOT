@@ -1,26 +1,101 @@
-function main()
+
+
+//const { finished } = require('stream');
+
+function main(message)
 {
     var newline = "       ";
-    var messageToEncode = "mensaje que voy a comprimir"
+    //var messageToEncode = "mensaje que voy a comprimir"
+    var messageToEncode = message;
+    //var messageToEncode = "1|helo=>Este, 2|txtx2=>txt2, 3|ajaj=>bajaja";
     console.log("messageToEncode is: " + messageToEncode + newline);
     var huffmanEncoding = new HuffmanEncoding();
     huffmanEncoding.encodeMessageIntoBits(messageToEncode);
     console.log("messageEncoded is: " + huffmanEncoding.bitsEncoded.join("") + newline);
     var messageDecoded = huffmanEncoding.decodeMessageFromBits(huffmanEncoding.bitsEncoded);
     console.log("messageDecoded is: " + messageDecoded + newline);
+    huffmanEncoding.saveEncoding(huffmanEncoding.bitsEncoded.join(""));
 }
  
 // classes
  
+
 function HuffmanEncoding()
 {}
 {
+    
+    function read(file){
+
+        var fs = require('fs'); 
+        var data = fs.readFileSync(file);
+        var readData = JSON.parse(data);
+        return readData;
+
+    }
+    
+    
+    
+    function writeSymbols(symbols, file){
+
+        
+        var fs = require('fs');
+        var data = JSON.stringify(symbols, null , 2);
+        //console.log(data);
+        fs.writeFileSync(file, data);
+         
+    
+    }
+
+
+
+    function writeEncodedData(file, bitsEncoded){
+        
+        var encodedData = read('../arbol.json');
+        encodedData["bitsEncoded"] = bitsEncoded;
+        var fs = require('fs');
+        var data = JSON.stringify(encodedData, null , 2);
+        //console.log(data);
+        fs.writeFileSync(file, data);
+        //console.log("Encoded = " + bitsEncoded);
+
+    }
+    
+
+
+    function inOrder(node){
+        var symbols = read('../arbol.json');
+        if(node.children.length == 0){
+
+            //symbols[node.code()] = node.symbol;
+            symbols[node.symbol] = node.code();
+            writeSymbols(symbols, '../arbol.json');
+
+        }
+        else {
+
+            inOrder(node.children[0]);
+            inOrder(node.children[1]);
+
+        }
+
+    }
+
+
+
+    HuffmanEncoding.prototype.saveEncoding =function(bitsEncoded){
+        
+        writeEncodedData('../arbol.json', bitsEncoded);
+        inOrder(this.treeRoot)
+        
+    }
+
     HuffmanEncoding.prototype.decodeMessageFromBits = function(bitsToDecode)
     {
         var messageDecoded = "";
  
         var treeNodeCurrent = this.treeRoot;
- 
+
+
         for (var b = 0; b < bitsToDecode.length; b++)
         {
             var bitCurrent = bitsToDecode[b];
@@ -35,25 +110,31 @@ function HuffmanEncoding()
  
         return messageDecoded;
     }
- 
-    HuffmanEncoding.prototype.encodeMessageIntoBits = function(messageToEncode)
-    {
-        var numberOfUniqueSymbols = 0;
+
+    function CalculateFrecuency(messageToEncode){
         var symbolToFrequencyLookup = [];
- 
+
         for (var i = 0; i < messageToEncode.length; i++)
         {
             var symbol = messageToEncode[i];
             var frequencyOfSymbol = symbolToFrequencyLookup[symbol];
             if (frequencyOfSymbol == null)
             {
-                numberOfUniqueSymbols++;
                 frequencyOfSymbol = 0;
             }
             frequencyOfSymbol++;
             symbolToFrequencyLookup[symbol] = frequencyOfSymbol;
         }
+
+        return symbolToFrequencyLookup;
+
+    }
  
+    HuffmanEncoding.prototype.encodeMessageIntoBits = function(messageToEncode)
+    {
+       
+        var symbolToFrequencyLookup = CalculateFrecuency(messageToEncode);
+        
         var treeNodesForSymbols = [];
         var symbolToTreeNodeLookup = [];
  
@@ -69,8 +150,7 @@ function HuffmanEncoding()
  
             symbolToTreeNodeLookup[symbol] = treeNodeForSymbol;
  
-            var i;
-            for (i = 0; i < treeNodesForSymbols.length; i++)
+            for (var i = 0; i < treeNodesForSymbols.length; i++)
             {
                 var treeNodeExisting = treeNodesForSymbols[i];
                 if (frequencyOfSymbol <= treeNodeExisting.frequency)
@@ -174,6 +254,7 @@ function HuffmanEncoding()
     }
 }
  
+
 function HuffmanTreeNode(symbol, frequency, children)
 {
     this.symbol = symbol;
@@ -186,6 +267,7 @@ function HuffmanTreeNode(symbol, frequency, children)
         child.parent = this;
     }
 }
+
 {
     HuffmanTreeNode.prototype.code = function()
     {
@@ -237,6 +319,6 @@ function HuffmanTreeNode(symbol, frequency, children)
 }
  
 // run
- 
-main();
+//main();
+module.exports = {main};
  

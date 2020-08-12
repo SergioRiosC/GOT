@@ -1,0 +1,13 @@
+
+1|Hola=>Este
+2|txtx2=>txt2
+3|ajaj=>bajaja
+1|Hola=>Este
+2|txtx2=>txt2
+3|ajaj=>bajaja
+1|1|Hola=>Este, 2|txtx2=>txt2, 3|ajaj=>bajaja, =>Este
+2|undefined=>txt2
+3|undefined=>bajaja
+1|Hola=>Este
+2|txtx2=>txt2
+3|ajaj=>bajaja

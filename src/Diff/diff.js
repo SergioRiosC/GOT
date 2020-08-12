@@ -1,6 +1,7 @@
 const lineReader=require('line-reader');
 const{exec}=require('child_process');
 const fs =require('fs');
+const{main} = require('../huffman')
 
 
 var path=require('path');
@@ -10,7 +11,8 @@ var cambios=false;
 var i=1;
 console.log(file1.toString());
 console.log(file2);
-var nuevosCambios="";
+var modificaciones="";
+var nuevosCambios = "";
 
 lineReader.open(file1, function(err,reader1){
     lineReader.open(file2, function(err,reader2){
@@ -18,7 +20,7 @@ lineReader.open(file1, function(err,reader1){
             reader1.nextLine(function(err, line1){
                 reader2.nextLine(function(err, line2){
                     
-                    nuevosCambios=nuevosCambios+line2+"\n";
+                    modificaciones=modificaciones+line2+"\n";
                     if(line1==line2){
                         //console.log("iguales");
                     }else{
@@ -27,17 +29,27 @@ lineReader.open(file1, function(err,reader1){
                         console.log("Existe una diferencia en la linea "+i+" de los archivos");
                         console.log("Archivo llamado "+file1+" contiene: "+line1+"\n"+
                                     "Archivo llamado "+file2+" contiene: "+line2);
+                        
+                        nuevosCambios = nuevosCambios + i + "|" + line1 + "=>" + line2 + ", ";
+                        var CambioTXT= i+"|"+line1+"=>"+line2+"\n";
+                        fs.appendFile('Cambios.txt',CambioTXT, (error)=>{
+                            if(error){throw error;}
+                            console.log("Archivo con nuevos cambios guardados");
+                            
+                        });
                     }
                 });
             });
             i++;
         }
-        console.log('camb: '+nuevosCambios);
+        
+        main(nuevosCambios);
+        console.log('camb: '+modificaciones);
 
         if(cambios){
-            fs.writeFile(file1, nuevosCambios, (err)=>{
+            fs.writeFile(file1, modificaciones, (err)=>{
                 if(err){throw err;}
-                console.log("Actiualizado");
+                console.log("Actualizado");
             });
             fs.createReadStream(file2).pipe(fs.createWriteStream('txtSRV/TXT2') );
             
@@ -70,3 +82,4 @@ lineReader.open(file1, function(err,reader1){
     });    
 });
 
+//main("1|hello=>Este, 2|txtx2=>txt2, 3|ajaj=>bajaja");
