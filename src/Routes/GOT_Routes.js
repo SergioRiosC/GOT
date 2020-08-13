@@ -11,12 +11,14 @@ router.post('/repository', (req, res) => {
     //console.log(req);
     
     const query =`
-    create table `+ repository_Name +` (
-        id int(11) not null auto_increment,
-        name varchar(45) default null,
-        salary int(11) default null,
-        primary key(id)
-    );`;
+    CREATE TABLE GOT.`+ repository_Name +` (
+        commitID INT NOT NULL,
+        filesChanged VARCHAR(300) NOT NULL,
+        repID INT NOT NULL,
+        PRIMARY KEY (commitID),
+        FOREIGN KEY (repID) REFERENCES GOT.repositories (repositoryID)
+          ON DELETE NO ACTION
+          ON UPDATE NO ACTION);`;
 
     mysqlConnection.query(query, [repository_Name], (err, rows, fields) => {
         

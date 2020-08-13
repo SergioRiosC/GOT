@@ -2,7 +2,7 @@
 
 //const { finished } = require('stream');
 
-function main(message)
+function main(message, file)
 {
     var newline = "       ";
     //var messageToEncode = "mensaje que voy a comprimir"
@@ -14,7 +14,7 @@ function main(message)
     console.log("messageEncoded is: " + huffmanEncoding.bitsEncoded.join("") + newline);
     var messageDecoded = huffmanEncoding.decodeMessageFromBits(huffmanEncoding.bitsEncoded);
     console.log("messageDecoded is: " + messageDecoded + newline);
-    huffmanEncoding.saveEncoding(huffmanEncoding.bitsEncoded.join(""));
+    huffmanEncoding.saveEncoding(huffmanEncoding.bitsEncoded.join(""), file);
 }
  
 // classes
@@ -26,9 +26,11 @@ function HuffmanEncoding()
     
     function read(file){
 
+        console.log(file);
         var fs = require('fs'); 
         var data = fs.readFileSync(file);
         var readData = JSON.parse(data);
+        console.log(readData);
         return readData;
 
     }
@@ -49,32 +51,31 @@ function HuffmanEncoding()
 
 
     function writeEncodedData(file, bitsEncoded){
-        
-        var encodedData = read('../arbol.json');
+        var encodedData = read('../changedFiles/prefab.json');
         encodedData["bitsEncoded"] = bitsEncoded;
         var fs = require('fs');
         var data = JSON.stringify(encodedData, null , 2);
         //console.log(data);
-        fs.writeFileSync(file, data);
+        fs.writeFileSync('../changedFiles/'+file+'.json', data);
         //console.log("Encoded = " + bitsEncoded);
 
     }
     
 
 
-    function inOrder(node){
-        var symbols = read('../arbol.json');
+    function inOrder(node, file){
+        var symbols = read('../changedFiles/'+file+'.json');
         if(node.children.length == 0){
 
             //symbols[node.code()] = node.symbol;
             symbols[node.symbol] = node.code();
-            writeSymbols(symbols, '../arbol.json');
+            writeSymbols(symbols, '../changedFiles/'+file+'.json');
 
         }
         else {
 
-            inOrder(node.children[0]);
-            inOrder(node.children[1]);
+            inOrder(node.children[0],file);
+            inOrder(node.children[1],file);
 
         }
 
@@ -82,10 +83,10 @@ function HuffmanEncoding()
 
 
 
-    HuffmanEncoding.prototype.saveEncoding =function(bitsEncoded){
+    HuffmanEncoding.prototype.saveEncoding =function(bitsEncoded, file){
         
-        writeEncodedData('../arbol.json', bitsEncoded);
-        inOrder(this.treeRoot)
+        writeEncodedData(file, bitsEncoded);
+        inOrder(this.treeRoot, file)
         
     }
 
