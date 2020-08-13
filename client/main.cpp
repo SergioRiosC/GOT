@@ -91,8 +91,12 @@ int main(int argc, char* argv[]) {
 
         else if (arg1.compare("status") == 0){
             
-            cout << "status" << endl;
+            cpr::Response r = cpr::Get(
+                    cpr::Url{"http://localhost:3000/status"},
+                    cpr::Header{ { "Content-Type", "application/json" }}
+                ); 
 
+            cout<<r.text;
         } 
 
         else if (arg1.compare("rollback") == 0){

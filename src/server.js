@@ -10,7 +10,7 @@ app.set('port', process.env.PORT || 3000)
 app.use(express.json());
 
 //Routes
-app.use(require('./Routes/employees'));
+//app.use(require('./Routes/employees'));
 app.use(require('./Routes/GOT_Routes'));
 
 // Start the Server
