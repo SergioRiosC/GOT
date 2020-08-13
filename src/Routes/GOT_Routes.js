@@ -4,6 +4,7 @@ const mysqlConnection = require('../database');
 const path = require('path');
 const { Router } = require('express');
 const {Diff}=require('../Diff/diff');
+const fs = require('fs');
 
 var repositoryInUse = 'repository';
 var repositoryInUseID = 1;
@@ -97,5 +98,21 @@ router.get('/status',(req,res)=>{
     }
 });
 
+router.get("/reset", (req,res)=>{
+    const {fileName} = req.query;
+    if(fileName != undefined){
+        mysqlConnection.query(`       
+        SELECT route FROM files where name = '`+path.basename(fileName)+`'
+    `, [fileName], (err, rows, fields) => {
+        if(!err){
+            fs.createReadStream(rows[0]['route']).pipe(fs.createWriteStream(fileName) );
+            res.json({"STATUS" : 200});
+        }else{
+            console.log(err);
+        }
+
+    })
+    }    
+    });
 
 module.exports = router;

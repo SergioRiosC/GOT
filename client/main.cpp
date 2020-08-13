@@ -106,8 +106,14 @@ int main(int argc, char* argv[]) {
         } 
 
         else if (arg1.compare("reset") == 0){
-            
-            cout << "reset" << endl;
+            string name=argv[2];
+            cpr::Response r = cpr::Get(
+                    cpr::Url{"http://localhost:3000/reset"},
+                    cpr::Parameters{{"fileName",(string)name}},
+                    cpr::Header{ { "Content-Type", "application/json" }}
+                ); 
+
+            cout<<r.text;
 
         } 
 
