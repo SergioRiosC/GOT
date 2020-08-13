@@ -4,9 +4,10 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
+    
 
     if(argc < 2){
-
+        
         cpr::Response r = cpr::Get(cpr::Url{"http://localhost:3000/"});
         r.status_code;                  // 200
         r.header["content-type"];       // application/json; charset=utf-8
@@ -15,7 +16,7 @@ int main(int argc, char* argv[]) {
         return -1;
 
     }else{
-
+        
         string arg1(argv[1]);
 
         if (arg1.compare("init") == 0){
@@ -23,6 +24,7 @@ int main(int argc, char* argv[]) {
             {
                 cout << "Debe especificar que repositorio desea crear\n";
                 cout << "got init <name>";
+                
             }
             else
             {
@@ -65,6 +67,17 @@ int main(int argc, char* argv[]) {
         } 
 
         else if (arg1.compare("add") == 0){
+            if(argv[2]=="[-A]"){
+                cout << "-A" << endl;    
+            }else
+            {
+                string name=argv[2];
+                cpr::Response r = cpr::Post(
+                    cpr::Url{"http://localhost:3000/files"},
+                    cpr::Parameters{{"fileName",(string)name}},
+                    cpr::Header{ { "Content-Type", "application/json" }}
+                ); 
+            }
             
             cout << "add" << endl;
 
